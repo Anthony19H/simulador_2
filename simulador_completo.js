@@ -35,4 +35,45 @@
       mostrarTexto("mensajeTasa","La tasa debe estar entre 10% y 20%")
     }
   }
+
+
+  function guardarClientes(){
+    let cmpCedula =recuperaraTexto("idCedula");
+    let cmpNombre =recuperaraTexto("idNombre");
+    let cmpApellido = recuperaraTexto("idApellido");
+    let cmpIngresos = recuperarInt("idIngresos");
+    let cmpEgresos = recuperarInt("idEgresos");
+
+    let cliente ={
+        cedula: cmpCedula,
+        nombre: cmpNombre,
+        apellido: cmpApellido,
+        ingresos: cmpIngresos,
+        egresos: cmpEgresos
+    };
+    clientes.push(cliente);
+    pintarClientes();
+  }
+
+
+  function pintarClientes(){
+    let tablaClientes = document.getElementById("tablaClientes");
+    let contenido=""
+    for( let i = 0; i<clientes.length; i++){
+      let cliente = clientes[i];
+      contenido += `<tr>
+          <td>${cliente.cedula}</td>
+          <td>${cliente.nombre}</td>
+          <td>${cliente.apellido}</td>
+          <td>${cliente.ingresos}</td>
+          <td>${cliente.egresos}</td>
+          <td>
+            <button>Actualizar</button>
+            <button>Eliminar</button>
+          </td>
+        </tr>`
+
+    }
+    tablaClientes.innerHTML = contenido;
+  }
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
