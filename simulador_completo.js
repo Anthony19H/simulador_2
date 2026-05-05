@@ -44,6 +44,9 @@
     let cmpIngresos = recuperarInt("idIngresos");
     let cmpEgresos = recuperarInt("idEgresos");
 
+    let clienteEncontrado = buscarCliente(cmpCedula);
+
+    if(clienteEncontrado == null){
     let cliente ={
         cedula: cmpCedula,
         nombre: cmpNombre,
@@ -52,7 +55,17 @@
         egresos: cmpEgresos
     };
     clientes.push(cliente);
+    console.log("Se ha creado un nuevo registro.");
+    }else{
+      clienteEncontrado.nombre = cmpNombre;
+        clienteEncontrado.apellido = cmpApellido;
+        clienteEncontrado.ingresos = cmpIngresos;
+        clienteEncontrado.egresos = cmpEgresos;
+        console.log("Se han actualizado los datos del cliente.");
+    }
     pintarClientes();
+    limpiar();
+  
   }
 
 
@@ -68,12 +81,51 @@
           <td>${cliente.ingresos}</td>
           <td>${cliente.egresos}</td>
           <td>
-            <button>Actualizar</button>
-            <button>Eliminar</button>
+            <button onclick="seleccionarCliente('${cliente.cedula}')">Actualizar</button>
           </td>
         </tr>`
 
     }
     tablaClientes.innerHTML = contenido;
   }
+
+
+  function buscarCliente(cedula){
+    let elementoCliente;
+    let clienteEncontrado = null
+    for(let i = 0; i < clientes.length; i++){
+      let elementoCliente = clientes [i];
+      if(elementoCliente.cedula == cedula){
+        clienteEncontrado = elementoCliente;
+        break;
+      }
+    }
+    return clienteEncontrado;
+  }
+
+
+  function seleccionarCliente(cedula) {
+  let clienteEncontrado = buscarCliente(cedula);
+
+  if (clienteEncontrado != null) {
+    
+    clienteSeleccionado = clienteEncontrado;
+
+    mostrarTextoEnCaja("idCedula", clienteSeleccionado.cedula);
+    mostrarTextoEnCaja("idNombre", clienteSeleccionado.nombre);
+    mostrarTextoEnCaja("idApellido", clienteSeleccionado.apellido);
+    mostrarTextoEnCaja("idIngresos", clienteSeleccionado.ingresos);
+    mostrarTextoEnCaja("idEgresos", clienteSeleccionado.egresos);
+    
+    console.log("Cliente seleccionado: " + clienteSeleccionado.nombre);
+  }
+}
+
+function limpiar() {
+    limpiarCaja("idCedula");
+    limpiarCaja("idNombre");
+    limpiarCaja("idApellido");
+    limpiarCaja("idIngresos");
+    limpiarCaja("idEgresos");
+}
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
