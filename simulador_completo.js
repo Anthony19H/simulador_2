@@ -15,8 +15,12 @@
     listaClass.remove("activa");
 
     let componente2 = document.getElementById("clientes");
-    let listaClass2 = componente.classList;
+    let listaClass2 = componente2.classList;
     listaClass2.remove("activa");
+
+    let componente3 = document.getElementById("credito");
+    let listaClass3 = componente3.classList;
+    listaClass3.remove("activa");
   };
 
   function mostrarSeccion(id){
@@ -108,7 +112,7 @@
   let clienteEncontrado = buscarCliente(cedula);
 
   if (clienteEncontrado != null) {
-    
+
     clienteSeleccionado = clienteEncontrado;
 
     mostrarTextoEnCaja("idCedula", clienteSeleccionado.cedula);
@@ -128,4 +132,82 @@ function limpiar() {
     limpiarCaja("idIngresos");
     limpiarCaja("idEgresos");
 }
-//Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
+
+function buscarClienteCredito(){
+  let creditoCedula =recuperarInt("buscarCedulaCredito");
+  let creditoEncontrado = buscarCliente(creditoCedula);
+  clienteSeleccionado = creditoEncontrado;
+  if( creditoEncontrado != null){
+    let datos=`<h3>Datos del Cliente</h3>
+<p><strong>Cédula:</strong>${creditoEncontrado.cedula}</p>
+<p><strong>Nombre:</strong>${creditoEncontrado.nombre}</p>
+<p><strong>Apellido:</strong>${creditoEncontrado.apellido}</p>
+<p><strong>Ingresos:</strong>${creditoEncontrado.ingresos}</p>
+<p><strong>Egresos:</strong>${creditoEncontrado.egresos}</p>
+`;
+       
+    document.getElementById("datosClienteCredito").innerHTML = datos;
+  }else{
+     document.getElementById("datosClienteCredito").innerHTML = "CLIENTE NO ENCONTRADO";
+  }
+ 
+}
+
+function calcularCredito() {
+  mostrarTexto("errorMonto", "");
+  mostrarTexto("errorPlazo", "");
+    // 1. Validar que primero se haya buscado y seleccionado un cliente
+    if (clienteSeleccionado == null) {
+        alert("Primero debes buscar y seleccionar un cliente");
+        return;
+    }
+
+    // 2. CAPTURA DE DATOS CORRECTA
+
+    
+    
+    
+    // Sacamos los datos de los cuadritos de la sección de crédito
+    let monto = parseFloat(document.getElementById("montoCredito").value);
+    let plazo = parseInt(document.getElementById("plazoCredito").value);
+
+    let hayError = false;
+
+    if (isNaN(monto) || monto <= 0) {
+        mostrarTexto("errorMonto", "Debe ingresar un monto mayor a 0");
+    }
+    
+    if (isNaN(plazo) || plazo <= 0) {
+        mostrarTexto("errorPlazo", "Debe ingresar un plazo válido");
+        hayError = true;
+    }
+
+    if (hayError) {
+        return;
+    }
+
+    // Sacamos los datos directamente del objeto que encontramos en la búsqueda
+    let ingresos = clienteSeleccionado.ingresos; // ¡YA NO SALE UNDEFINED!
+    let egresos = clienteSeleccionado.egresos;
+    
+    // La tasa la sacamos del parámetro global
+    let tasa = tasaInteres; 
+
+    // 3. LÓGICA DE CÁLCULOS
+    // Ahora pasamos los números reales a tus funciones de negocio
+    let disponible = calcularDisponible(ingresos, egresos);
+    let capacidadPago = calcularCapacidadPago(disponible);
+    let interesSimple = CalcularInteresSimple(monto, tasa, plazo);
+    let totalPagar = calcularTotalPagar(monto, interesSimple);
+    let cuotaMensual = calcularCuotaMesual(totalPagar, plazo);
+    let analizarCredito = aprobarCredito(capacidadPago, cuotaMensual);
+
+    // 4. MOSTRAR RESULTADOS
+    document.getElementById("resultadoCredito").innerHTML = `
+        <h3>Resultado del Análisis</h3>
+        <p><strong>Capacidad de pago:</strong> $${capacidadPago.toFixed(2)}</p>
+        <p><strong>Total a pagar:</strong> $${totalPagar.toFixed(2)}</p>
+        <p><strong>Cuota mensual:</strong> $${cuotaMensual.toFixed(2)}</p>
+        <p><strong>Estado:</strong> ${analizarCredito}</p>
+    `;
+}

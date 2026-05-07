@@ -14,6 +14,7 @@
 <nav>
   <button onclick="mostrarSeccion('parametros')">Parámetros</button>
   <button onclick="mostrarSeccion('clientes')" >Clientes</button>
+  <button onclick="mostrarSeccion('credito')" >Creditos</button>
 </nav>
 
 <section id="parametros">
@@ -27,6 +28,31 @@
   <button onclick="guardarTasa()">Guardar tasa</button>
 
   <p id="mensajeTasa"></p>
+</section>
+
+<section id="credito">
+  <h2>Solicitar Crédito</h2>
+
+  <input type="text" id="buscarCedulaCredito">
+  <button onclick="buscarClienteCredito()">Buscar cliente</button>
+
+  <div id="datosClienteCredito" class="card"></div>
+
+  <input type="number" id="montoCredito" placeholder="Monto">
+<div id="errorMonto" style="color: red; font-size: 12px;"></div> 
+
+<input type="number" id="plazoCredito" placeholder="Plazo">
+<div id="errorPlazo" style="color: red; font-size: 12px;"></div> 
+
+  <br>
+
+  <button onclick="calcularCredito()">Calcular crédito</button>
+
+  <div id="resultadoCredito"></div>
+
+  <button id="btnSolicitarCredito" onclick="solicitarCredito()" disabled>
+    Solicitar crédito
+  </button>
 </section>
 
 <section id="clientes">
