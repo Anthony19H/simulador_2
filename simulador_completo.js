@@ -156,18 +156,12 @@ function buscarClienteCredito(){
 function calcularCredito() {
   mostrarTexto("errorMonto", "");
   mostrarTexto("errorPlazo", "");
-    // 1. Validar que primero se haya buscado y seleccionado un cliente
+    
     if (clienteSeleccionado == null) {
         alert("Primero debes buscar y seleccionar un cliente");
         return;
     }
 
-    // 2. CAPTURA DE DATOS CORRECTA
-
-    
-    
-    
-    // Sacamos los datos de los cuadritos de la sección de crédito
     let monto = parseFloat(document.getElementById("montoCredito").value);
     let plazo = parseInt(document.getElementById("plazoCredito").value);
 
