@@ -186,7 +186,7 @@ function calcularCredito() {
     }
 
     // Sacamos los datos directamente del objeto que encontramos en la búsqueda
-    let ingresos = clienteSeleccionado.ingresos; // ¡YA NO SALE UNDEFINED!
+    let ingresos = clienteSeleccionado.ingresos; 
     let egresos = clienteSeleccionado.egresos;
     
     // La tasa la sacamos del parámetro global
@@ -265,7 +265,6 @@ function pintarCreditos(creditos){
           <td>${elementoCredito.tasa}</td>
           <td>${elementoCredito.plazo}</td>
           <td>${elementoCredito.cuota.toFixed(2)}</td>
-          <td><button>Eliminar</button></td>
         </tr>`
   }
   TABLA.innerHTML =contenido;
