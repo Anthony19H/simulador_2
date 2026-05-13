@@ -237,6 +237,7 @@ function asignarCredito(){
     cuota:cuotaCalculada,
   }
   creditos.push(credito);
+  document.getElementById("btnSolicitarCredito").disabled = true 
 }
 
 
