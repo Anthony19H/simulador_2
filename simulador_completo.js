@@ -3,6 +3,7 @@
   let creditos = [];
 
   let tasaInteres = 15;
+  let montoMaximoPermitido = 10000;
   let clienteSeleccionado = null;
   let cuotaCalculada = 0;
   let montoCalculado = 0;
@@ -25,6 +26,14 @@
     let componente4 = document.getElementById("listaCreditos");
     let listaClass4 = componente4.classList;
     listaClass4.remove("activa");
+
+    let componente5 = document.getElementById("creditosVIP");
+    let listaClass5 = componente5.classList;
+    listaClass5.remove("activa");
+
+    let componente6 = document.getElementById("acercaDe");
+    let listaClass6 = componente6.classList;
+    listaClass6.remove("activa");
   };
 
   function mostrarSeccion(id){
@@ -37,10 +46,20 @@
 
   function guardarTasa(){
     let tasa=recuperarFloat("tasaInteres");
+    let montoMax = recuperarFloat("montoMaximo");
+
     if(tasa>=10 && tasa<=20){
       mostrarTexto("mensajeTasa","Tasa configurada correctamente: " + tasa+"%")
+      tasaInteres = tasa;
     }else{
       mostrarTexto("mensajeTasa","La tasa debe estar entre 10% y 20%")
+    }
+
+    if(!isNaN(montoMax) && montoMax >0){
+      montoMaximoPermitido = montoMax;
+      mostrarTexto("mensajeMonto","Monto máximo configurado en $" + montoMaximoPermitido + ".");
+    }else{
+       mostrarTexto("mensajeMonto","Monto maximo no valido: ");
     }
   }
 
@@ -51,6 +70,7 @@
     let cmpApellido = recuperaraTexto("idApellido");
     let cmpIngresos = recuperarInt("idIngresos");
     let cmpEgresos = recuperarInt("idEgresos");
+    let cmpTelefono = recuperaraTexto("idTelefono");
 
     let clienteEncontrado = buscarCliente(cmpCedula);
 
@@ -60,7 +80,8 @@
         nombre: cmpNombre,
         apellido: cmpApellido,
         ingresos: cmpIngresos,
-        egresos: cmpEgresos
+        egresos: cmpEgresos,
+        telefono: cmpTelefono
     };
     clientes.push(cliente);
     console.log("Se ha creado un nuevo registro.");
@@ -69,6 +90,7 @@
         clienteEncontrado.apellido = cmpApellido;
         clienteEncontrado.ingresos = cmpIngresos;
         clienteEncontrado.egresos = cmpEgresos;
+        clienteEncontrado.telefono = cmpTelefono
         console.log("Se han actualizado los datos del cliente.");
     }
     pintarClientes();
@@ -88,6 +110,7 @@
           <td>${cliente.apellido}</td>
           <td>${cliente.ingresos}</td>
           <td>${cliente.egresos}</td>
+          <td>${cliente.telefono}</td>
           <td>
             <button onclick="seleccionarCliente('${cliente.cedula}')">Actualizar</button>
           </td>
@@ -124,6 +147,8 @@
     mostrarTextoEnCaja("idApellido", clienteSeleccionado.apellido);
     mostrarTextoEnCaja("idIngresos", clienteSeleccionado.ingresos);
     mostrarTextoEnCaja("idEgresos", clienteSeleccionado.egresos);
+    mostrarTextoEnCaja("idTelefono", clienteSeleccionado.telefono);
+
     
     console.log("Cliente seleccionado: " + clienteSeleccionado.nombre);
   }
@@ -135,6 +160,7 @@ function limpiar() {
     limpiarCaja("idApellido");
     limpiarCaja("idIngresos");
     limpiarCaja("idEgresos");
+    limpiarCaja("idTelefono");
 }
 
 function buscarClienteCredito(){
@@ -174,6 +200,10 @@ function calcularCredito() {
     if (isNaN(monto) || monto <= 0) {
         mostrarTexto("errorMonto", "Debe ingresar un monto mayor a 0");
         hayError = true;
+    }else if(monto > montoMaximoPermitido){
+      mostrarTexto("errorMonto","El monto supera al límite permitido de $" + montoMaximoPermitido);
+      limpiarCaja("montoCredito");
+      hayError = true;
     }
     
     if (isNaN(plazo) || plazo <= 0) {
@@ -278,4 +308,30 @@ function buscarCreditosCliente(){
   limpiarCaja("buscarCedulaListado");
   pintarCreditos(buscarCreditoCl);
 
+}
+function creditosVIP(){
+  let vip = [];
+  let contenido ="";
+  const TABLA_VIP = document.getElementById("tablaCreditosVIP");
+  for(let i =0;i<creditos.length;i++){
+    let creditoVip = creditos[i];
+
+    if(creditoVip.monto >5000){
+      vip.push(creditoVip);
+    }
+  }
+  for (let x = 0; x < vip.length; x++) {
+    let elementoVip = vip[x];
+    contenido += `<tr>
+          <td>${elementoVip.cedula}</td>
+          <td>${elementoVip.nombre}</td>
+          <td>${elementoVip.apellido}</td>
+          <td>$${elementoVip.monto}</td>
+          <td>${elementoVip.tasa}%</td>
+          <td>${elementoVip.plazo} años</td>
+          <td>$${elementoVip.cuota.toFixed(2)}</td>
+        </tr>`;
+  }
+
+  TABLA_VIP.innerHTML = contenido;
 }
